@@ -18,7 +18,7 @@ function Home() {
             // POST 요청 보내기
             const response = await axios.post('http://3.39.185.125:8080/api/emergency/api/call', null, {
                 params: {
-                    patientName: patientName
+                    patientName: prefix
                 }
             });
             alert(response.data); // 서버로부터 받은 응답 메시지 출력
