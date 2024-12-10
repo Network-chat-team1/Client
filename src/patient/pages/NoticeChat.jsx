@@ -1,15 +1,48 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './NoticeChat.module.css';
 import NavBar from '../components/NavBar';
 
 function NoticeChat() {
-    // Mock 데이터
-    const messages = [
-        { id: 1, sender: "공지방", time: "02:58 PM", text: "Hi! Thanks for reaching out. What can I get for you?" },
-        { id: 2, sender: "공지방", time: "02:58 PM", text: "We can have that ready for you in about 30-40 minutes. Would you like to proceed with the order?" },
-        { id: 3, sender: "공지방", time: "02:58 PM", text: "We can have that ready for you in about 30-40 minutes. Would you like to proceed with the order?" },
-        { id: 4, sender: "공지방", time: "02:58 PM", text: "We can have that ready for you in about 30-40 minutes. Would you like to proceed with the order?" },
-    ];
+    const [messages, setMessages] = useState([]); // 공지 메시지를 저장할 상태
+    const ws = useRef(null); // WebSocket 객체를 저장할 Ref
+
+    useEffect(() => {
+        // WebSocket 연결
+        ws.current = new WebSocket('ws://3.39.185.125:8080/ws/announcements');
+
+        ws.current.onopen = () => {
+            console.log("WebSocket 연결 성공");
+        };
+
+        ws.current.onmessage = (event) => {
+            try {
+                const receivedMessage = JSON.parse(event.data);
+                const newMessage = {
+                    id: Date.now(), // 고유 ID 생성
+                    sender: "공지방",
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    text: receivedMessage.text,
+                };
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
+            } catch (error) {
+                console.error("메시지 처리 중 오류 발생:", error);
+            }
+        };
+
+        ws.current.onerror = (error) => {
+            console.error("WebSocket 에러:", error);
+        };
+
+        ws.current.onclose = () => {
+            console.log("WebSocket 연결 종료");
+        };
+
+        return () => {
+            if (ws.current) {
+                ws.current.close(); // 컴포넌트 언마운트 시 WebSocket 연결 종료
+            }
+        };
+    }, []);
 
     return (
         <div className={styles.chatContainer}>
