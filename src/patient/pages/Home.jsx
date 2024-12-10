@@ -10,16 +10,16 @@ function Home() {
     const queryParams = new URLSearchParams(location.search);
     const prefix = queryParams.get('prefix'); 
 
-    // 환자 이름을 여기에 추가할 수 있음 (예: "민서")
-    const [patientName, setPatientName] = useState(prefix);
+    // // 환자 이름을 여기에 추가할 수 있음 (예: "민서")
+    // const [patientName, setPatientName] = useState(prefix);
 
     const handleEmergencyCall = async () => {
         try {
             // POST 요청 보내기
-            const response = await axios.post('http://3.39.185.125:8080/api/emergency/api/call', null, {
+            const response = await axios.post('http://3.39.185.125:8080/api/emergency/api/call',null, {
                 params: {
-                    patientName: prefix
-                }
+                    patientName: "장지효",
+                },
             });
             alert(response.data); // 서버로부터 받은 응답 메시지 출력
         } catch (error) {
