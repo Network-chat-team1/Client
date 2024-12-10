@@ -27,7 +27,7 @@ function ChatScreen() {
             return;
         }
 
-        const wsUrl = `ws://3.39.185.125:8080/ws/doctorchat?uniqueIdentifier=${uniqueIdentifier}`;
+        const wsUrl = `wss://network-chat.store/ws/doctorchat?uniqueIdentifier=${uniqueIdentifier}`;
         console.log(`WebSocket 연결 시도 (URL: ${wsUrl})`);
 
         ws.current = new WebSocket(wsUrl);
