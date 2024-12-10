@@ -5,7 +5,7 @@ import NavBar from '../components/NavBar';
 function NoticeChat() {
     const [messages, setMessages] = useState([]); // 공지 메시지를 저장할 상태
     const ws = useRef(null); // WebSocket 객체를 저장할 Ref
-
+//hello
     useEffect(() => {
         // WebSocket 연결
         ws.current = new WebSocket('ws://3.39.185.125:8080/ws/announcements');
@@ -16,12 +16,12 @@ function NoticeChat() {
 
         ws.current.onmessage = (event) => {
             try {
-                const receivedMessage = JSON.parse(event.data);
+                const receivedMessage = event.data;
                 const newMessage = {
                     id: Date.now(), // 고유 ID 생성
                     sender: "공지방",
                     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                    text: receivedMessage.text,
+                    text: receivedMessage,
                 };
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
             } catch (error) {
