@@ -8,7 +8,7 @@ function NoticeChat() {
 //hello
     useEffect(() => {
         // WebSocket 연결
-        ws.current = new WebSocket('ws://3.39.185.125:8080/ws/announcements');
+        ws.current = new WebSocket('wss://network-chat.store/ws/announcements');
 
         ws.current.onopen = () => {
             console.log("WebSocket 연결 성공");
