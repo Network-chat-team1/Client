@@ -3,16 +3,17 @@ import { useNavigate } from "react-router-dom";
 import styles from './Home.module.css';
 import { useLocation } from 'react-router-dom';
 
-
 function Home() {
-    // const userName = "민서"; // 예제 사용자 이름
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const prefix = queryParams.get('prefix'); 
-    const navigate = useNavigate(); // React Router의 useNavigate 훅
+    const prefix = queryParams.get('prefix'); // prefix 값 가져오기
+    const id = queryParams.get('id'); // id 값 가져오기
+
+    const navigate = useNavigate(); 
 
     const handleChatNavigation = () => {
-        navigate("/doctor/chat");
+        // id 값을 포함하여 /doctor/chat으로 이동
+        navigate(`/doctor/chat?id=${id}`);
     };
 
     const handleHealthNavigation = () => {

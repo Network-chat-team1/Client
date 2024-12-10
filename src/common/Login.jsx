@@ -18,8 +18,11 @@ function Login() {
         }
     
         try {
-            // API 요청
-            const response = await fetch(`/api/login?uniqueIdentifier=${id}&password=${password}`, {
+            // API 요청 REACT_APP_API_URL 추가
+
+            const apiUrl = process.env.REACT_APP_API_URL;
+
+            const response = await fetch(`${apiUrl}/api/login?uniqueIdentifier=${id}&password=${password}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,12 +37,13 @@ function Login() {
             alert(data); // 로그인 성공 메시지 표시
     
             const messagePrefix = data.slice(0, 3);
+            const userId = id;
     
             // 선택된 카테고리에 따라 라우팅하며 메시지 전달
             if (category === 'patient') {
-                navigate(`/patient/home?prefix=${messagePrefix}`); // 환자 페이지로 이동
+                navigate(`/patient/home?prefix=${messagePrefix}&id=${userId}`); // 환자 페이지로 이동
             } else if (category === 'doctor') {
-                navigate(`/doctor/home?prefix=${messagePrefix}`); // 의료진 페이지로 이동
+                navigate(`/doctor/home?prefix=${messagePrefix}&id=${userId}`); // 의료진 페이지로 이동
             } else {
                 alert('유효하지 않은 사용자 유형입니다.');
             }

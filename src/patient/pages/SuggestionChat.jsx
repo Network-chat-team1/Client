@@ -19,7 +19,7 @@ function SuggestionChat() {
             return;
         }
 
-        ws.current = new WebSocket('ws://3.39.185.125:8080/ws/suggestions');
+        ws.current = new WebSocket('wss://network-chat.store/ws/suggestions');
 
         ws.current.onopen = () => {
             console.log("WebSocket 연결 성공");
