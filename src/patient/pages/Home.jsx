@@ -16,7 +16,7 @@ function Home() {
     const handleEmergencyCall = async () => {
         try {
             // POST 요청 보내기
-            const response = await axios.post('http://3.39.185.125:8080/api/call', null, {
+            const response = await axios.post('http://3.39.185.125:8080/api/emergency/api/call', null, {
                 params: {
                     patientName: patientName
                 }
