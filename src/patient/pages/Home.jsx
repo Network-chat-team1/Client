@@ -16,12 +16,12 @@ function Home() {
         try {
             const response = await axios({
                 method: 'post',
-                url: `https://network-chat.store/api/emergency/api/call`, // URL 그대로 사용
-                params: { patientName: patientName }, // patientName을 직접 전달
-                paramsSerializer: (params) => {
-                    const queryString = new URLSearchParams(params).toString();
-                    return decodeURIComponent(queryString); // 한글 문자열 디코딩
-                }
+                url: `https://network-chat.store/api/emergency/api/call?prefix=${prefix}`, // URL 그대로 사용
+                // params: { patientName: prefix }, // patientName을 직접 전달
+                // paramsSerializer: (params) => {
+                //     const queryString = new URLSearchParams(params).toString();
+                //     return decodeURIComponent(queryString); // 한글 문자열 디코딩
+                // }
             });
             alert(response.data); // 서버 응답 메시지 출력
         } catch (error) {
