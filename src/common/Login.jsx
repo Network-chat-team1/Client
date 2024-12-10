@@ -18,7 +18,7 @@ function Login() {
         }
     
         try {
-            // API 요청
+            // API 요청 REACT_APP_API_URL 추가
 
             const apiUrl = process.env.REACT_APP_API_URL;
 
