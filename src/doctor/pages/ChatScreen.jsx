@@ -4,7 +4,7 @@ import styles from './ChatScreen.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid'; // UUID 생성 라이브러리
+import { useLocation } from 'react-router-dom';
 
 function ChatScreen() {
     const navigate = useNavigate();
@@ -16,8 +16,10 @@ function ChatScreen() {
     const reconnectInterval = useRef(3000);
     const ws = useRef(null);
 
-    // 사용자 고유 식별자 생성
-    const uniqueIdentifier = useRef(uuidv4()); // UUID 생성
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const id = queryParams.get('id'); // id 값 가져오기
+    const uniqueIdentifier = id; // 사용자 고유 식별자
 
     const connectWebSocket = () => {
         if (connectionAttempts >= maxReconnectAttempts) {
@@ -25,7 +27,7 @@ function ChatScreen() {
             return;
         }
 
-        const wsUrl = `ws://3.39.185.125:8080/ws/doctorchat?uniqueIdentifier=${uniqueIdentifier.current}`;
+        const wsUrl = `ws://3.39.185.125:8080/ws/doctorchat?uniqueIdentifier=${uniqueIdentifier}`;
         console.log(`WebSocket 연결 시도 (URL: ${wsUrl})`);
 
         ws.current = new WebSocket(wsUrl);
@@ -38,31 +40,34 @@ function ChatScreen() {
 
         ws.current.onmessage = (event) => {
             try {
-                const receivedMessage = JSON.parse(event.data);
+                // 첫 번째 JSON 파싱
+                const parsedMessage = JSON.parse(event.data);
 
-                // 내가 보낸 메시지가 아닐 경우에만 추가
-                if (receivedMessage.sender !== uniqueIdentifier.current) {
-                    const newMessage = {
-                        id: messages.length + 1,
-                        sender: "other", // 다른 사용자 메시지
-                        text: receivedMessage.text, // JSON의 text 필드만 가져오기
-                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                    };
+                // 중첩된 message 필드를 다시 파싱
+                const innerMessage = JSON.parse(parsedMessage.message);
 
-                    setMessages((prevMessages) => [...prevMessages, newMessage]);
-                }
-            } catch (error) {
-                console.error("JSON 파싱 오류:", error);
-                console.error("수신된 메시지:", event.data);
+                // 서버에서 받은 메시지가 내가 보낸 메시지인지 확인
+                const isMyMessage = innerMessage.sender === uniqueIdentifier;
 
                 const newMessage = {
-                    id: messages.length + 1,
-                    sender: "other",
-                    text: event.data, // 원문 데이터를 그대로 표시
+                    id: parsedMessage.id || `${Date.now()}-${Math.random()}`, // 고유 ID 생성
+                    sender: isMyMessage ? "user" : "other",
+                    text: isMyMessage
+                        ? innerMessage.text // 내가 보낸 메시지는 내용만 표시
+                        : `${parsedMessage.sender}: ${innerMessage.text}`, // 남이 보낸 메시지는 이름 + 내용 표시
                     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 };
 
-                setMessages((prevMessages) => [...prevMessages, newMessage]);
+                // 중복 확인 후 상태 업데이트
+                setMessages((prevMessages) => {
+                    if (prevMessages.some((msg) => msg.id === newMessage.id)) {
+                        return prevMessages; // 중복 메시지 무시
+                    }
+                    return [...prevMessages, newMessage];
+                });
+            } catch (error) {
+                console.error("JSON 파싱 오류:", error);
+                console.error("수신된 메시지:", event.data);
             }
         };
 
@@ -95,26 +100,22 @@ function ChatScreen() {
     }, []);
 
     const handleSendMessage = () => {
-        if (input.trim() === "") return;
+        if (!input.trim()) return; // 빈 메시지 필터링
 
-        const newMessage = {
-            id: messages.length + 1,
-            sender: "user", // 현재 사용자
+        // 서버로 전송할 메시지 생성
+        const messageToSend = {
             text: input,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            sender: uniqueIdentifier, // 고유 식별자를 포함
         };
 
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-
+        // WebSocket을 통해 메시지 전송
         if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-            ws.current.send(JSON.stringify({
-                text: input,
-                sender: uniqueIdentifier.current, // 클라이언트의 고유 식별자를 포함
-            }));
+            ws.current.send(JSON.stringify(messageToSend));
         } else {
             console.error("WebSocket이 열려있지 않습니다. 메시지를 전송할 수 없습니다.");
         }
 
+        // 입력 필드 초기화
         setInput("");
     };
 
@@ -134,14 +135,14 @@ function ChatScreen() {
                 <div className={styles.details}>
                     <h2 className={styles.title}>의료진 채팅방</h2>
                     <p className={styles.subtitle}>
-                        {isConnected ? "연결됨" : `연결 중... (시도: ${connectionAttempts})`}
+                        {isConnected ? "연결됨" : `연결 중...`}
                     </p>
                 </div>
             </header>
             <div className={styles.chatBody}>
                 {messages.map((message) => (
                     <div
-                        key={message.id}
+                        key={message.id} // 고유한 id를 사용하여 중복 방지
                         className={`${styles.message} ${
                             message.sender === "user" ? styles.userMessage : styles.otherMessage
                         }`}
