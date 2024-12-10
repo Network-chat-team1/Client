@@ -50,7 +50,7 @@ function Login() {
     return (
         <div className={styles.frame}>
             <img src={logo} alt="Hospital Logo" />
-            <h1>로그인</h1>
+            <h1>로그인을 하세요.</h1>
             <p>안녕하세요, 저희 서비스의 사용을 위해서는 <br />먼저 로그인해주시기 바랍니다.</p>
             <form className={styles.form} onSubmit={handleSubmit}>
                 <div className={styles.inputGroup}>
