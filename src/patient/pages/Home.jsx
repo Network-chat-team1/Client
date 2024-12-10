@@ -10,13 +10,15 @@ function Home() {
     const queryParams = new URLSearchParams(location.search);
     const prefix = queryParams.get('prefix'); 
 
-    const [patientName, setPatientName] = useState(prefix);
+    const patientName=encodeURIComponent(prefix);
+    
+
 
     const handleEmergencyCall = async () => {
         try {
             const response = await axios({
                 method: 'post',
-                url: `https://network-chat.store/api/emergency/api/call?prefix=${prefix}`, // URL 그대로 사용
+                url: `https://network-chat.store/api/emergency/api/call?patientName=${patientName}`, // URL 그대로 사용
                 // params: { patientName: prefix }, // patientName을 직접 전달
                 // paramsSerializer: (params) => {
                 //     const queryString = new URLSearchParams(params).toString();

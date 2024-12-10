@@ -40,36 +40,76 @@ function ChatScreen() {
 
         ws.current.onmessage = (event) => {
             try {
-                // 첫 번째 JSON 파싱
-                const parsedMessage = JSON.parse(event.data);
-
-                // 중첩된 message 필드를 다시 파싱
+                const data = event.data;
+            
+                // event.data가 JSON 형식이 아닌 경우 긴급 메시지 처리로 넘기기
+                if (!isJson(data)) {
+                    // 긴급 메시지 처리 (EmergencyMessageHandler로 넘김)
+                    EmergencyMessageHandler(data);
+                    return;
+                }else{
+            
+                // JSON 형식이라면 처리
+                const parsedMessage = JSON.parse(data);
                 const innerMessage = JSON.parse(parsedMessage.message);
-
-                // 서버에서 받은 메시지가 내가 보낸 메시지인지 확인
+            
                 const isMyMessage = innerMessage.sender === uniqueIdentifier;
-
+            
                 const newMessage = {
-                    id: parsedMessage.id || `${Date.now()}-${Math.random()}`, // 고유 ID 생성
+                    id: parsedMessage.id || `${Date.now()}-${Math.random()}`,
                     sender: isMyMessage ? "user" : "other",
                     text: isMyMessage
-                        ? innerMessage.text // 내가 보낸 메시지는 내용만 표시
-                        : `${parsedMessage.sender}: ${innerMessage.text}`, // 남이 보낸 메시지는 이름 + 내용 표시
+                        ? innerMessage.text
+                        : `${parsedMessage.sender}: ${innerMessage.text}`,
                     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    isEmergency: false, // 긴급 메시지가 아니므로 false
                 };
-
-                // 중복 확인 후 상태 업데이트
+            
                 setMessages((prevMessages) => {
                     if (prevMessages.some((msg) => msg.id === newMessage.id)) {
-                        return prevMessages; // 중복 메시지 무시
+                        return prevMessages;
                     }
                     return [...prevMessages, newMessage];
                 });
+            }
+            
             } catch (error) {
-                console.error("JSON 파싱 오류:", error);
-                console.error("수신된 메시지:", event.data);
+                console.error("처리 중 오류 발생:", error);
             }
         };
+        
+        // 긴급 메시지 처리 함수 (원본 텍스트 그대로 전송)
+        const EmergencyMessageHandler = (message) => {
+            const newMessage = {
+                id: `${Date.now()}-${Math.random()}`,
+                sender: "system", // 긴급 메시지는 시스템에서 온 것으로 처리
+                text: message, // 원본 메시지 그대로
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                isEmergency: true, // 긴급 메시지 표시
+            };
+        
+            setMessages((prevMessages) => {
+                if (prevMessages.some((msg) => msg.id === newMessage.id)) {
+                    return prevMessages;
+                }
+                return [...prevMessages, newMessage];
+            });
+        };
+        
+        // JSON 형식인지 확인하는 함수
+        const isJson = (data) => {
+            try {
+                JSON.parse(data);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        };
+        
+        
+        
+        
+        
 
         ws.current.onerror = (error) => {
             console.error("WebSocket 에러:", error);
@@ -140,18 +180,19 @@ function ChatScreen() {
                 </div>
             </header>
             <div className={styles.chatBody}>
-                {messages.map((message) => (
-                    <div
-                        key={message.id} // 고유한 id를 사용하여 중복 방지
-                        className={`${styles.message} ${
-                            message.sender === "user" ? styles.userMessage : styles.otherMessage
-                        }`}
-                    >
-                        <p className={styles.text}>{message.text}</p>
-                        <span className={styles.time}>{message.time}</span>
-                    </div>
-                ))}
-            </div>
+    {messages.map((message) => (
+        <div
+            key={message.id} // 고유한 id를 사용하여 중복 방지
+            className={`${styles.message} ${
+                message.sender === "user" ? styles.userMessage : styles.otherMessage
+            } ${message.isEmergency ? styles.emergencyMessage : ""}`} // 긴급 메시지 스타일 적용
+        >
+            <p className={styles.text}>{message.text}</p>
+            <span className={styles.time}>{message.time}</span>
+        </div>
+    ))}
+</div>
+
             <footer className={styles.footer}>
                 <input
                     type="text"

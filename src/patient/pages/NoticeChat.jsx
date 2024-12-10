@@ -57,12 +57,18 @@ function NoticeChat() {
             </header>
             <div className={styles.chatBody}>
                 {messages.map((message) => (
-                    <div key={message.id} className={styles.message}>
+                    <div
+                        key={message.id} // 고유한 id를 사용하여 중복 방지
+                        className={`${styles.message} ${
+                            message.sender === "user" ? styles.userMessage : styles.otherMessage
+                        } ${message.isEmergency ? styles.emergencyMessage : ""}`} // 긴급 메시지 스타일 적용
+                    >
                         <p className={styles.text}>{message.text}</p>
                         <span className={styles.time}>{message.time}</span>
                     </div>
                 ))}
             </div>
+
             <NavBar />
         </div>
     );
