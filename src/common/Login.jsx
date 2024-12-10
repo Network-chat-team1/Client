@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // React Router 사용
+import axios from 'axios'; // Axios로 API 요청
 import styles from './Login.module.css';
 import logo from './img/Hospital.png';
 
@@ -9,7 +10,7 @@ function Login() {
     const [password, setPassword] = useState(''); // 비밀번호 상태
     const navigate = useNavigate(); // React Router 네비게이션
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!category || !id || !password) {
@@ -17,13 +18,30 @@ function Login() {
             return;
         }
 
-        // 선택된 카테고리에 따라 라우팅
-        if (category === 'patient') {
-            navigate('/patient/home'); // 환자 페이지로 이동
-        } else if (category === 'doctor') {
-            navigate('/doctor/home'); // 의료진 페이지로 이동
-        } else {
-            alert('유효하지 않은 사용자 유형입니다.');
+        try {
+            const response = await axios.get('http://3.39.185.125:8080/api/login', {
+                params: {
+                    uniqueIdentifier: id,
+                    password: password,
+                },
+            });
+
+            if (response.status === 200) {
+                alert(response.data); // 서버의 응답 메시지 출력
+
+                // 선택된 카테고리에 따라 라우팅
+                if (category === 'patient') {
+                    navigate('/patient/home'); // 환자 페이지로 이동
+                } else if (category === 'doctor') {
+                    navigate('/doctor/home'); // 의료진 페이지로 이동
+                } else {
+                    alert('유효하지 않은 사용자 유형입니다.');
+                }
+            }
+        } catch (error) {
+            // 에러 처리
+            console.error(error);
+            alert('로그인에 실패했습니다. 다시 시도해주세요.');
         }
     };
 
