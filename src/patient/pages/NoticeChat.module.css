@@ -1,0 +1,84 @@
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    background-color: #f9f9f9;
+    font-family: 'Arial', sans-serif;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+    width: 42px;
+    height: 42px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+
+.iconText {
+    font-size: 12px;
+    color: #777;
+    font-weight: bold;
+    text-align: center;
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 12px;
+    color: #888;
+    margin: 0;
+}
+
+.chatBody {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+}
+
+.message {
+    margin-bottom: 16px;
+    background-color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.text {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.time {
+    font-size: 12px;
+    color: #aaa;
+    text-align: right;
+}
+
+/* WebKit Browsers (Chrome, Edge, Safari) */
+body::-webkit-scrollbar, .chatBody::-webkit-scrollbar {
+    display: none;
+}

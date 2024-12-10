@@ -1,0 +1,10 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw; /* 화면의 너비를 디바이스 너비로 고정 */
+  max-width: 375px; /* 최대 너비를 모바일 크기로 고정 */
+  height: 100vh; /* 화면 전체 높이 */
+  margin: 0 auto; /* 화면을 가운데 정렬 */
+  overflow-x: hidden;
+  font-family: 'Roboto', sans-serif; /* Roboto 폰트 적용 */
+}

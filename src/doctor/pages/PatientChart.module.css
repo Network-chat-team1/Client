@@ -1,0 +1,43 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    gap: 70px; /* 자식 아이템 간의 간격 */
+}
+
+.header>button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.title {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    color: #1455B0;
+    margin-bottom: 20px;
+}
+
+.chartList {
+    width: 90%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* WebKit Browsers (Chrome, Edge, Safari) */
+body::-webkit-scrollbar, .frame::-webkit-scrollbar {
+    display: none;
+  }
+  

@@ -1,0 +1,110 @@
+.frame {
+    background-color: #1E68D7;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    height: 100vh; /* Full viewport height */
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+img {
+    width: 200px;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    margin-top: 0px;
+}
+
+p {
+    margin-bottom: 30px;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 300px; 
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    text-align: left;
+}
+
+label {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.select,
+.input {
+    width: 100%; 
+    padding: 15px; 
+    font-size: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.5); 
+    border-radius: 15px; 
+    background-color: rgba(255, 255, 255, 0.2); 
+    color: white; 
+    outline: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+    transition: all 0.3s ease;
+}
+
+.input {
+    width: 267px; /* 임시 적용.. */
+}
+
+select,
+select option {
+    color: black;
+    background-color: white; 
+    padding: 10px; 
+    font-size: 1rem; 
+    border: none; 
+    outline: none;
+}
+
+
+
+.select::placeholder,
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.7); 
+}
+
+.select:focus,
+.input:focus {
+    border-color: rgba(255, 255, 255, 0.9); 
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+
+
+.button {
+    width: 100%; 
+    max-width: 300px; 
+    padding: 15px;
+    font-size: 1rem;
+    color: #1455B0;
+    background-color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.button:hover {
+    background-color: #f0f0f0; 
+}

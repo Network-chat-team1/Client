@@ -1,0 +1,69 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.header {
+    margin-top: 90px;
+    text-align: center;
+}
+
+.greeting {
+    font-size: 24px;
+    margin: 0;
+}
+
+.greeting > span {
+    font-size: 30px;
+    color: #1455B0;
+    font-weight: bolder;
+}
+
+.mainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* 버튼 사이 간격 */
+}
+
+.chatButton,
+.healthButton {
+    width: 200px;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chatButton {
+    background-color: #1455B0;
+    color: white;
+}
+
+.chatButton:hover {
+    background-color: #0f3a8d;
+    transform: translateY(-2px);
+}
+
+.healthButton {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.healthButton:hover {
+    background-color: #388E3C;
+    transform: translateY(-2px);
+}
