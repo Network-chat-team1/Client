@@ -37,14 +37,33 @@ function ChatScreen() {
         };
 
         ws.current.onmessage = (event) => {
-            const receivedMessage = JSON.parse(event.data);
-            const newMessage = {
-                id: messages.length + 1,
-                sender: "other", // 서버 또는 다른 사용자 메시지
-                text: receivedMessage.text,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            };
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
+            try {
+                const receivedMessage = JSON.parse(event.data);
+
+                // 내가 보낸 메시지가 아닐 경우에만 추가
+                if (receivedMessage.sender !== uniqueIdentifier.current) {
+                    const newMessage = {
+                        id: messages.length + 1,
+                        sender: "other", // 다른 사용자 메시지
+                        text: receivedMessage.text, // JSON의 text 필드만 가져오기
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    };
+
+                    setMessages((prevMessages) => [...prevMessages, newMessage]);
+                }
+            } catch (error) {
+                console.error("JSON 파싱 오류:", error);
+                console.error("수신된 메시지:", event.data);
+
+                const newMessage = {
+                    id: messages.length + 1,
+                    sender: "other",
+                    text: event.data, // 원문 데이터를 그대로 표시
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                };
+
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
+            }
         };
 
         ws.current.onerror = (error) => {
@@ -80,7 +99,7 @@ function ChatScreen() {
 
         const newMessage = {
             id: messages.length + 1,
-            sender: "user",
+            sender: "user", // 현재 사용자
             text: input,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         };
@@ -88,7 +107,10 @@ function ChatScreen() {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
 
         if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-            ws.current.send(JSON.stringify({ text: input }));
+            ws.current.send(JSON.stringify({
+                text: input,
+                sender: uniqueIdentifier.current, // 클라이언트의 고유 식별자를 포함
+            }));
         } else {
             console.error("WebSocket이 열려있지 않습니다. 메시지를 전송할 수 없습니다.");
         }
