@@ -12,16 +12,19 @@ function Home() {
 
     // // 환자 이름을 여기에 추가할 수 있음 (예: "민서")
     // const [patientName, setPatientName] = useState(prefix);
-
+    const [patientName] = useState("장지효");
     const handleEmergencyCall = async () => {
         try {
-            // POST 요청 보내기
-            const response = await axios.post('http://3.39.185.125:8080/api/emergency/api/call',null, {
-                params: {
-                    patientName: "장지효",
-                },
+            const response = await axios({
+                method: 'post',
+                url: `https://network-chat.store/api/emergency/api/call`, // URL 그대로 사용
+                params: { patientName: patientName }, // patientName을 직접 전달
+                paramsSerializer: (params) => {
+                    const queryString = new URLSearchParams(params).toString();
+                    return decodeURIComponent(queryString); // 한글 문자열 디코딩
+                }
             });
-            alert(response.data); // 서버로부터 받은 응답 메시지 출력
+            alert(response.data); // 서버 응답 메시지 출력
         } catch (error) {
             console.error("비상 호출 오류:", error);
             alert("비상 호출에 실패했습니다. 다시 시도해주세요.");
