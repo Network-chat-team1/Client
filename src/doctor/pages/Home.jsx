@@ -1,9 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from './Home.module.css';
+import { useLocation } from 'react-router-dom';
+
 
 function Home() {
-    const userName = "민서"; // 예제 사용자 이름
+    // const userName = "민서"; // 예제 사용자 이름
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const prefix = queryParams.get('prefix'); 
     const navigate = useNavigate(); // React Router의 useNavigate 훅
 
     const handleChatNavigation = () => {
@@ -17,7 +22,7 @@ function Home() {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <h1 className={styles.greeting}><span>{userName}</span>님, 안녕하세요!</h1>
+                <h1 className={styles.greeting}><span>{prefix}</span>님, 안녕하세요!</h1>
             </header>
             <main className={styles.mainContent}>
                 <button className={styles.chatButton} onClick={handleChatNavigation}>

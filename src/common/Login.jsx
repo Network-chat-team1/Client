@@ -11,33 +11,35 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!category || !id || !password) {
             alert('사용자 유형, 식별 번호, 비밀번호를 모두 입력해주세요.');
             return;
         }
-
+    
         try {
-            // API 요청 (프록시를 활용한 상대 경로)
+            // API 요청
             const response = await fetch(`/api/login?uniqueIdentifier=${id}&password=${password}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-
+    
             if (!response.ok) {
                 throw new Error('로그인 실패! 사용자 정보를 확인해주세요.');
             }
-
+    
             const data = await response.text(); // 응답이 텍스트인 경우
             alert(data); // 로그인 성공 메시지 표시
-
-            // 선택된 카테고리에 따라 라우팅
+    
+            const messagePrefix = data.slice(0, 3);
+    
+            // 선택된 카테고리에 따라 라우팅하며 메시지 전달
             if (category === 'patient') {
-                navigate('/patient/home'); // 환자 페이지로 이동
+                navigate(`/patient/home?prefix=${messagePrefix}`); // 환자 페이지로 이동
             } else if (category === 'doctor') {
-                navigate('/doctor/home'); // 의료진 페이지로 이동
+                navigate(`/doctor/home?prefix=${messagePrefix}`); // 의료진 페이지로 이동
             } else {
                 alert('유효하지 않은 사용자 유형입니다.');
             }
@@ -46,6 +48,7 @@ function Login() {
             alert('로그인 중 오류가 발생했습니다.');
         }
     };
+    
 
     return (
         <div className={styles.frame}>
