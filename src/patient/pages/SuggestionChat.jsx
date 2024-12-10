@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from './SuggestionChat.module.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from "react-router-dom";
 
 function SuggestionChat() {
     const [messages, setMessages] = useState([]);
@@ -85,9 +86,17 @@ function SuggestionChat() {
         setInput("");
     };
 
+    const navigate = useNavigate();
+    const handleBackClick = () => {
+        navigate("/patient/home");
+    };
+
     return (
         <div className={styles.chatContainer}>
             <header className={styles.header}>
+                <button onClick={handleBackClick}>
+                    <FontAwesomeIcon icon={faArrowLeft} size="lg" style={{ color: "gray" }} />
+                </button>
                 <div className={styles.icon}>
                     <span className={styles.iconText}>관리자</span>
                 </div>

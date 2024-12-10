@@ -9,7 +9,7 @@ function Home() {
     // const userName = "민서"; // 예제 사용자 이름
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const prefix = queryParams.get('prefix'); // 첫 두 글자
+    const prefix = queryParams.get('prefix'); 
     return (
         <div className={styles.container}>
             <header className={styles.header}>

@@ -10,9 +10,16 @@
 .header {
     display: flex;
     align-items: center;
+    gap: 15px;
     padding: 16px;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header>button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
 }
 
 .icon {
