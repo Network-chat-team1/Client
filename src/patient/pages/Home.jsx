@@ -10,9 +10,8 @@ function Home() {
     const queryParams = new URLSearchParams(location.search);
     const prefix = queryParams.get('prefix'); 
 
-    // // 환자 이름을 여기에 추가할 수 있음 (예: "민서")
-    // const [patientName, setPatientName] = useState(prefix);
-    const [patientName] = useState("장지효");
+    const [patientName, setPatientName] = useState(prefix);
+
     const handleEmergencyCall = async () => {
         try {
             const response = await axios({
