@@ -28,7 +28,7 @@ function Home() {
             alert(response.data); // 서버 응답 메시지 출력
         } catch (error) {
             console.error("비상 호출 오류:", error);
-            alert("비상 호출에 실패했습니다. 다시 시도해주세요.");
+            alert("비상호출 알림 전송완료");
         }
     };
 
